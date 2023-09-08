@@ -1,68 +1,90 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import '../App.css';
 
-// Defining the Generator component
 const Generator = () => {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [text, setText] = useState('');
+  const [generatedImageVisible, setGeneratedImageVisible] = useState(false);
 
-  // Begin HTML Template
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setSelectedImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleGenerate = () => {
+    if (selectedImage && text) {
+      const generatedImage = (
+        <div className="image-with-text-container">
+          <img src={selectedImage} alt="Uploaded" width="300" />
+          <div className="overlay-text">{text}</div>
+        </div>
+      );
+      setGeneratedImageVisible(true);
+    }
+  };
+
   return (
     <div id="container">
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
-      />
       <div className="main_body">
-        <div className="welcome">
-          <h1>Welcome to Text Posterizer!</h1>
-        </div>
-        <section className="parameters_form">
-          <button type="button">
-            Generate
-          </button>
-        </section>
-        <br />
-        <section
-          className="slides"
-          style={{ display: 'none' }}
-        >
-          <div className="slide" style={{ display: 'none' }}>
-            <p id="slideText">TRIVIA</p>
-          </div>
-          <p id="fullscreen">
-            <span className="material-symbols-outlined">
-              fullscreen
-            </span>
-          </p>
-        </section>
-
-        <section className="noResults" style={{ display: 'none' }}>
-          <br />
-          <p style={{ color: 'red' }}>
-            Failed! Not enough questions to fulfill parameters.
-          </p>
-          <p>Please modify your parameters and try again.</p>
-        </section>
-
-        <section className="answerKey">
-          <div className="keyDisplay">
-            <label className="keyLabel" style={{ display: 'none' }}>
-              Answer Key
-            </label>
-            <br />
-            <div className="keyLink" style={{ display: 'none' }}>
-              <input
-                id="linkText"
-                type="text"
-                readOnly
-              />{' '}
-              <div id="copyButton">
-                <span className="material-symbols-outlined">content_copy</span>
+        <div id="spacer"/>
+        <div id="spacer"/>
+        <div className="grid-container">
+          <div className="grid-item">
+            <section className="parameters_form">
+              <div className="image-upload-container">
+                <h3>Upload an image</h3>
+                <div id="small-spacer" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="form-control mb-3"
+                />
+                {selectedImage && (
+                  <div>
+                    <div id="small-spacer" />
+                    <h4>Preview:</h4>
+                    <div id="small-spacer" />
+                    <img src={selectedImage} alt="Uploaded" width="300" />
+                  </div>
+                )}
               </div>
-            </div>
+              <div className='text-input-container'>
+                <div id="spacer" />
+                <h3>Enter text</h3>
+                <div id="small-spacer" />
+                <textarea
+                  className="form-input"
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                />
+              </div>
+              <div id="spacer" />
+              <button type="button" onClick={handleGenerate}>
+                Generate
+              </button>
+            </section>
           </div>
-        </section>
-
-        <div id="spacer"></div>
+          <div className="grid-item">
+            {generatedImageVisible && (
+              <div>
+                <div id="small-spacer" />
+                <div className="image-with-text-container">
+                  <img src={selectedImage} alt="Uploaded" width="300" />
+                  <div className="overlay-text">{text}</div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        <div id="spacer" />
+        <div id="spacer" />
       </div>
     </div>
   );
