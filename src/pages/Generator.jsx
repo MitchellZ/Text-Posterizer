@@ -19,12 +19,6 @@ const Generator = () => {
 
   const handleGenerate = () => {
     if (selectedImage && text) {
-      const generatedImage = (
-        <div className="image-with-text-container">
-          <img src={selectedImage} alt="Uploaded" width="300" />
-          <div className="overlay-text">{text}</div>
-        </div>
-      );
       setGeneratedImageVisible(true);
     }
   };
