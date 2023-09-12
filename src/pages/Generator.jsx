@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../App.css';
 
 const Generator = () => {
@@ -8,6 +8,7 @@ const Generator = () => {
   const [lineHeight, setLineHeight] = useState('1.2'); // Initial line height
   const [padding, setPadding] = useState('5');
   const [generatedImageVisible, setGeneratedImageVisible] = useState(false);
+  const [numberOfLines, setNumberOfLines] = useState(1);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -36,7 +37,7 @@ const Generator = () => {
 
   const handlePaddingChange = (e) => {
     setPadding(e.target.value);
-  }
+  };
 
   const overlayTextStyle = {
     fontSize: `${fontSize}px`, // Add "px" to the font size
@@ -44,6 +45,29 @@ const Generator = () => {
     padding: `${padding}px`,
     width: `calc(100% - ${padding * 2}px)`,
   };
+
+  const calculateNumberOfLines = () => {
+    const overlayTextContainer = document.querySelector('.overlay-text');
+    if (overlayTextContainer) {
+      const overlayHeight = overlayTextContainer.clientHeight;
+      const lineHeightValue = parseFloat(lineHeight);
+      const calculatedLines = overlayHeight / (parseFloat(fontSize) * lineHeightValue);
+  
+      // Count the '\n' characters in the text
+      const newlineCount = (text.match(/\n/g) || []).length;
+  
+      setNumberOfLines(calculatedLines.toFixed(2));
+      
+      // Log the number of '\n' characters
+      console.log(`Number of '\\n' characters: ${newlineCount}`);
+    }
+  };
+  
+
+  useEffect(() => {
+    calculateNumberOfLines();
+    // eslint-disable-next-line
+  }, [text, lineHeight, fontSize, padding]);
 
   return (
     <div id="container">
@@ -109,13 +133,14 @@ const Generator = () => {
                   <label htmlFor="padding">Padding:</label>
                   <div id="small-spacer" />
                   <input
-                    type="number" // Change input type to number
+                    type="number"
                     id="padding"
                     value={padding}
                     onChange={handlePaddingChange}
                   />
                 </div>
               )}
+              <div>Number of Lines: {Math.floor(numberOfLines)}</div>
               <div id="spacer" />
               <button type="button" onClick={handleGenerate}>
                 Generate
