@@ -66,6 +66,9 @@ const Generator = () => {
 
   useEffect(() => {
     calculateNumberOfLines();
+    
+    // TODO: Add function to calculate number of characters per line
+
     // eslint-disable-next-line
   }, [text, lineHeight, fontSize, padding]);
 
