@@ -57,9 +57,6 @@ const Generator = () => {
       const newlineCount = (text.match(/\n/g) || []).length;
   
       setNumberOfLines(calculatedLines.toFixed(2));
-      
-      // Log the number of '\n' characters
-      console.log(`Number of '\\n' characters: ${newlineCount}`);
     }
   };
   
