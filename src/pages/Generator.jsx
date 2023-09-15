@@ -53,9 +53,6 @@ const Generator = () => {
       const lineHeightValue = parseFloat(lineHeight);
       const calculatedLines = overlayHeight / (parseFloat(fontSize) * lineHeightValue);
   
-      // Count the '\n' characters in the text
-      const newlineCount = (text.match(/\n/g) || []).length;
-  
       setNumberOfLines(calculatedLines.toFixed(2));
     }
   };
