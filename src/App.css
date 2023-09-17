@@ -10,16 +10,20 @@ body {
   height: 100%;
   min-height: 100%;
   background-color: #1b1b1b;
-  font-family: monospace;
+  /* font-family: monospace; */
+}
+
+h1 {
+  color: white;
+  font-size: 16pt;
+}
+
+p {
+  color: white;
 }
 
 #container {
   min-height: 100vh;
-}
-
-h1,
-p {
-  font-family: Helvetica;
 }
 
 .grid-container {
@@ -29,11 +33,11 @@ p {
 
 .grid-item {
   display: flexbox;
-  min-width: 30%;
+  min-width: 40vw;
   width: auto;
   max-width: 45vw;
   padding: 10px;
-  margin: 0 auto;
+  margin: calc(25px + 10vh) auto;
 }
 
 .nav {
@@ -94,182 +98,55 @@ p {
   width: 70%;
 }
 
-.parameters_form {
-  /* Make it scrollable */
-  overflow: auto;
-  display: block;
-  padding: 20px 24px 20px 24px;
+.line-counts{
+  background-color: #303030;
+  padding: 10px;
   border-radius: 5px;
-  margin-left: 1vw;
-  margin-right: auto;
-  margin-bottom: 28px;
-  width: calc(100% - 48px);
-  max-width: 400px;
-  max-height: 75vh;
-  background-color: #454545;
-  box-shadow: 0px 3px 10px -2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
-.parameters_form img {
-  width: auto;
-  max-height: 132px;
-}
-
-.parameters_form h3 {
-  /* A very light gray */
-  color: #e5e5e5;
-  font-weight: 400;
-  font-size: large;
-}
-
-.parameters_form h4 {
-  /* A very light gray */
-  color: #e5e5e5;
-  font-weight: 400;
-  font-size: 16px;
-}
-
-.parameters_form select {
-  padding: 10px;
-  width: 45%;
-  background-color: white;
-  border: 3px solid #b00feb;
-  border-radius: 10px;
-}
-
-.parameters_form input {
-  box-sizing: border-box;
-  padding: 10px;
-  width: auto;
-  background-color: #d14efd34;
-  color: white;
-  font-weight: bold;
-  /* border: 3px solid #b00feb; */
-  border: none;
-  border-radius: 10px;
-}
-
-.parameters_form textarea {
-  width: 100%;
-  height: 150px;
-}
-
-.input_item {
-  margin-top: 8px;
-  margin-bottom: 24px;
-}
-
-.parameters_form select:hover {
-  background-color: #ce47ff;
-}
-
-.parameters_form input:hover {
-  background-color: #ce47ffa0;
-}
-
-.parameters_form p {
-  font-size: larger;
-  font-weight: bold;
-  color: #0d6583;
-}
-
-label {
-  font-family: Helvetica;
-  color: #d054f6;
-}
-
-.parameters_form button {
-  padding: 10px;
-  display: block;
-  margin-top: 8px;
+.image-container{
+  position: relative;
+  width: fit-content;
+  height: auto;
   margin-left: auto;
   margin-right: auto;
-  width: 45%;
-  background-color: #e66cf4;
-  color: white;
-  /* border: 3px solid #d50feb; */
-  border: none;
-  border-radius: 10px;
-  font-family: Helvetica;
-  font-weight: bold;
-  /* Drop shadow */
-  box-shadow: 0px 3px 10px -2px rgba(0, 0, 0, 0.2);
+  border: gold solid 2px;
 }
 
-.parameters_form button:hover {
-  background-color: #c120d3;
-  color: white;
-  /* border: 3px solid #ab0ebc; */
-  /* Remove drop shadow */
-  box-shadow: none;
-}
-
-input {
-  scroll-margin-top: 100px;
-}
-
-input:focus {
-  outline: none;
-}
-
-select:focus {
-  outline: none;
-}
-
-#small-spacer {
-  height: 10px;
-}
-
-#spacer {
-  height: 40px;
-}
-
-#image-with-text {
-  /* Placeholder */
-  width: 100%;
-}
-
-.image-with-text-container {
-  position: relative;
-  display: inline-block;
-  margin: 0 5%;
-}
-
-.image-with-text-container img {
-  /* fit image from inline block */
-  width: 100%;
-  max-width: 60vw;
-  height: auto;
+img{
   max-height: 80vh;
-
-  /* center image */
-  display: block;
+  max-width: auto;
   margin: 0 auto;
-
-  user-select: none;
+  display: block;
 }
 
-.overlay-text {
+.text-overlay{
   position: absolute;
   top: 0;
   left: 0;
-  width: calc(100% - 20px);
-  padding: 10px;
-  margin: auto;
-  /* font-family: monospace; */
   text-align: justify;
   text-align-last: justify;
-  line-height: auto;
-  font-size: 30.1px;
   color: white;
-  /* pointer-events: none; To allow clicking through the text */
-  /* List all mix-blend-modes */
-  /* https://developer.mozilla.org/en-US/docs/Web/CSS/mix-blend-mode */
-
-  mix-blend-mode: multiply;
-  background-color: rgb(100, 100, 100);
 }
 
+.dummy{
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-align: justify;
+  text-align-last: justify;
+  background-color: rgba(0, 0, 0, 0.72);
+  color: gold;
+  font-family: 'Franklin Gothic Medium';
+  font-size: 34px;
+  line-height: 31.25px;
+  padding: 10px;
+}
+
+.line-counts{
+  color: white;
+}
 
 footer {
   position: relative;

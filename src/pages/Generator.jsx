@@ -1,165 +1,100 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import '../App.css';
 
 const Generator = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [text, setText] = useState('');
-  const [fontSize, setFontSize] = useState('16'); // Initial font size
-  const [lineHeight, setLineHeight] = useState('1.2'); // Initial line height
-  const [padding, setPadding] = useState('5');
-  const [generatedImageVisible, setGeneratedImageVisible] = useState(false);
-  const [numberOfLines, setNumberOfLines] = useState(1);
+  const text = "It is a period of civil war. Rebel spaceships, striking from a hidden base, have won their first victory against the evil Galactic Empire. During the battle, Rebel spies managed to steal secret plans to the Empire's ultimate weapon, the DEATH STAR, an armored space station with enough power to destroy an entire planet. Pursued by the Empire's sinister agents, Princess Leia races home aboard her starship, custodian of the stolen plans that can save her people and restore freedom to the galaxy....";
+  const dummytext = "";
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setSelectedImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+  const textRef = useRef(null);
+  const dummyRef = useRef(null);
+  const [displayedText, setDisplayedText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentHeight, setCurrentHeight] = useState(0);
+  const [lineCount, setLineCount] = useState(0);
+  const [charCount, setCharCount] = useState(0); // New state for character count
+  const [lettersPerLine, setLettersPerLine] = useState([]); // New state for letters per line
+  const [finishedPrinting, setFinishedPrinting] = useState(false);
+
+  const addWord = () => {
+    if (currentIndex < text.split(' ').length) {
+      const word = text.split(' ')[currentIndex];
+      setDisplayedText(prevText => prevText + ' ' + word);
+      setCurrentIndex(prevIndex => prevIndex + 1);
+      setCharCount(prevCharCount => prevCharCount + word.length); // Increment character count
     }
   };
 
-  const handleGenerate = () => {
-    if (selectedImage && text) {
-      setGeneratedImageVisible(true);
+  useLayoutEffect(() => {
+    // Check the current height of the dummy element and update line count and height
+    const containerHeight = dummyRef.current.offsetHeight;
+    if (containerHeight > currentHeight) {
+      setCurrentHeight(containerHeight);
+      if (charCount > 0)
+        setLineCount(prevLineCount => prevLineCount + 1); // Increment line count
     }
-  };
-
-  const handleFontSizeChange = (e) => {
-    setFontSize(e.target.value);
-  };
-
-  const handleLineHeightChange = (e) => {
-    setLineHeight(e.target.value);
-  };
-
-  const handlePaddingChange = (e) => {
-    setPadding(e.target.value);
-  };
-
-  const overlayTextStyle = {
-    fontSize: `${fontSize}px`, // Add "px" to the font size
-    lineHeight,
-    padding: `${padding}px`,
-    width: `calc(100% - ${padding * 2}px)`,
-  };
-
-  const calculateNumberOfLines = () => {
-    const overlayTextContainer = document.querySelector('.overlay-text');
-    if (overlayTextContainer) {
-      const overlayHeight = overlayTextContainer.clientHeight;
-      const lineHeightValue = parseFloat(lineHeight);
-      const calculatedLines = overlayHeight / (parseFloat(fontSize) * lineHeightValue);
-  
-      setNumberOfLines(calculatedLines.toFixed(2));
-    }
-  };
-  
+  }, [displayedText, currentHeight]);
 
   useEffect(() => {
-    calculateNumberOfLines();
-    
-    // TODO: Add function to calculate number of characters per line
+    const textContainer = textRef.current;
+    let currentLine = '';
 
+    const interval = setInterval(() => {
+      addWord();
+      textContainer.textContent = dummytext + currentLine;
+
+      if (currentIndex === text.split(' ').length) {
+        setFinishedPrinting(true);
+        clearInterval(interval);
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
     // eslint-disable-next-line
-  }, [text, lineHeight, fontSize, padding]);
+  }, [currentIndex]);
+
+  useEffect(() => {
+    // Calculate the number of letters in the current line excluding the last word
+    const wordsInLine = displayedText.trim().split(' ');
+    // Eliminate the last word (unless it's the last line)
+    if (!finishedPrinting)
+      wordsInLine.pop();
+    var lettersInLine = wordsInLine.reduce((count, word) => count + word.length, 0);
+
+    if (lineCount <= 1 || lettersInLine === 0)
+      return;
+
+    // Add all the letters from the previous lines
+    var previousLetters = lettersPerLine.reduce((count, word) => count + word, 0);
+
+    lettersInLine -= previousLetters;
+
+    // Check if the line count has changed before logging letters per line
+    if (lineCount !== lettersPerLine.length) {
+      setLettersPerLine(prevLetters => [...prevLetters, lettersInLine]);
+    }
+    // eslint-disable-next-line
+  }, [lineCount, finishedPrinting]);
 
   return (
-    <div id="container">
-      <div className="main_body">
-        <div id="spacer" />
-        <div id="spacer" />
-        <div className="grid-container">
-          <div className="grid-item">
-            <section className="parameters_form">
-              <div className="image-upload-container">
-                <h3>Upload an image</h3>
-                <div id="small-spacer" />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="form-control mb-3"
-                />
-                {selectedImage && (
-                  <div>
-                    <div id="small-spacer" />
-                    <h4>Preview:</h4>
-                    <div id="small-spacer" />
-                    <img src={selectedImage} alt="Uploaded" width="300" />
-                  </div>
-                )}
-              </div>
-              <div className="text-input-container">
-                <div id="spacer" />
-                <h3>Enter text</h3>
-                <div id="small-spacer" />
-                <textarea
-                  className="form-input"
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                />
-              </div>
-              {generatedImageVisible && (
-                <div>
-                  <div id="spacer" />
-                  <h3>Overlay Alignment</h3>
-                  <div id="small-spacer" />
-                  <label htmlFor="fontSize">Font Size:</label>
-                  <div id="small-spacer" />
-                  <input
-                    type="number"
-                    id="fontSize"
-                    value={fontSize}
-                    step="0.1"
-                    onChange={handleFontSizeChange}
-                  />
-                  <div id="small-spacer" />
-                  <label htmlFor="lineHeight">Line Height:</label>
-                  <div id="small-spacer" />
-                  <input
-                    type="number"
-                    id="lineHeight"
-                    value={lineHeight}
-                    step="0.01"
-                    onChange={handleLineHeightChange}
-                  />
-                  <div id="small-spacer" />
-                  <label htmlFor="padding">Padding:</label>
-                  <div id="small-spacer" />
-                  <input
-                    type="number"
-                    id="padding"
-                    value={padding}
-                    onChange={handlePaddingChange}
-                  />
-                </div>
-              )}
-              <div>Number of Lines: {Math.floor(numberOfLines)}</div>
-              <div id="spacer" />
-              <button type="button" onClick={handleGenerate}>
-                Generate
-              </button>
-            </section>
-          </div>
-          <div className="grid-item" id="image-with-text">
-            {generatedImageVisible && (
-              <div>
-                <div id="small-spacer" />
-                <div className="image-with-text-container">
-                  <img src={selectedImage} alt="Uploaded" width="300" />
-                  <div className="overlay-text" style={overlayTextStyle}>
-                    {text}
-                  </div>
-                </div>
-              </div>
-            )}
+    <div className="grid-container">
+      <div className="grid-item">
+        <div className="line-counts">
+          <h1>Metadata</h1>
+          <br />
+          Height of Dummy Element: {currentHeight}px <br />
+          Line Count: {lineCount} <br />
+          Letter Count: {charCount} <br />
+          Letters Per Line: {lettersPerLine.join(', ')}
+        </div>
+      </div>
+      <div className='grid-item'>
+        <div className='image-container'>
+          <img src="https://www.photomural.com/media/catalog/product/cache/2/thumbnail/9df78eab33525d08d6e5fb8d27136e95/0/2/026-dvd2_star_wars_poster_classic_1_web.jpg" alt="Star Wars Poster" />
+          <div className='text-overlay' ref={textRef}></div>
+          <div className='dummy' ref={dummyRef}>
+            <span>{dummytext}{displayedText}</span>
           </div>
         </div>
-        <div id="spacer" />
-        <div id="spacer" />
       </div>
     </div>
   );
