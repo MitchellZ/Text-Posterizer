@@ -32,6 +32,7 @@ const Generator = () => {
       if (charCount > 0)
         setLineCount(prevLineCount => prevLineCount + 1); // Increment line count
     }
+    // eslint-disable-next-line
   }, [displayedText, currentHeight]);
 
   useEffect(() => {
