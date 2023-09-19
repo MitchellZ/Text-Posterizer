@@ -47,6 +47,7 @@ const Generator = () => {
         setFinishedPrinting(true);
         clearInterval(interval);
       }
+      // Interval is set to 100ms or 0.1 seconds
     }, 100);
 
     return () => clearInterval(interval);
