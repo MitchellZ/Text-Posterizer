@@ -46,7 +46,7 @@ const Generator = () => {
         setFinishedPrinting(true);
         clearInterval(interval);
       }
-    }, 10);
+    }, 20);
 
     return () => clearInterval(interval);
     // eslint-disable-next-line
