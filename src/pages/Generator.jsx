@@ -53,6 +53,7 @@ const Generator = () => {
   }, [currentIndex]);
 
   useEffect(() => {
+    // Consider custom word wrapping logic for future versions
     const wordsInLine = displayedText.trim().split(' ');
     if (!finishedPrinting) wordsInLine.pop();
     var lettersInLine = wordsInLine.reduce((count, word) => count + word.length, 0);
